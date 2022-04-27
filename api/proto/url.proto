@@ -1,0 +1,40 @@
+syntax = "proto3";
+package url_shortener;
+
+option go_package = "./shortener";
+
+service UrlShortenerService {
+  rpc Create(CreateUrl) returns (UrlResponse) {}
+  rpc Delete(DeleteUrl) returns (DeleteResponse) {}
+  rpc Get(GetUrl) returns (UrlResponse) {}
+  rpc Redirect(RedirectUrl) returns (RedirectResponse) {}
+}
+
+message UrlResponse {
+  string Short = 1;
+  uint32 Views = 2;
+}
+
+message CreateUrl {
+  string Url = 1;
+}
+
+message GetUrl {
+  string Url = 1;
+}
+
+message DeleteUrl {
+  string Url = 1;
+}
+
+message DeleteResponse {
+  string Status = 1;
+}
+
+message RedirectUrl {
+  string Url = 1;
+}
+
+message RedirectResponse {
+  string ShortenedUrl = 1;
+}
