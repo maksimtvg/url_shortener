@@ -11,8 +11,9 @@ service UrlShortenerService {
 }
 
 message UrlResponse {
-  string Short = 1;
-  uint32 Views = 2;
+  string Long = 1;
+  string Short = 2;
+  int64 Views = 3;
 }
 
 message CreateUrl {

@@ -1,3 +1,4 @@
+// Package config builds app config
 package config
 
 import (
@@ -5,7 +6,7 @@ import (
 	"log"
 )
 
-//Config parses env vars
+// Config parses env vars
 type Config struct {
 	Host     string `required:"true"`
 	GRPCPort string `required:"true"`

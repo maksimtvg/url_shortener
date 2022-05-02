@@ -6,4 +6,5 @@ RUN GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -ldflags='-w -s' -o /go/bin/a
 
 FROM alpine:latest
 COPY --from=builder /go/bin/app /go/bin/app
+COPY ./internal/database/migrations/ ./db/migrations/
 ENTRYPOINT ["/go/bin/app"]
