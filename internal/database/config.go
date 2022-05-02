@@ -1,3 +1,5 @@
+// Package database.
+//DBConfig is responsible for Database config.
 package database
 
 import (
@@ -9,7 +11,7 @@ const MaxConn = 10
 
 // DBConfig is a struct for env vars
 type DBConfig struct {
-	Host       string `required:"true"`
+	DBHost     string `required:"true"`
 	DBUserName string `required:"true"`
 	DBPassword string `required:"true"`
 	DBPort     string `required:"true"`

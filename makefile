@@ -1,14 +1,23 @@
 test_storage:
 	@go clean -testcache && go test -v ./internal/storage
 
+db_up:
+	@docker-compose up -d --build && docker-compose up -d
+
+service_up:
+	@docker-compose up -d urlservice
+
 run_server:
-	@env GRPCPORT=50051 HOST=localhost go run ./cmd/main.go
+	@env GRPCPORT=50051 HOST="pgdb" DBNAME=urls DBPORT=5432 DBHOST=localhost DBUSERNAME=backend DBPASSWORD=user TIMEOUT=5 go run ./cmd/main.go
 
 run_client:
-	@env GRPCPORT=50051 HOST=localhost go run ./cmd/client.go
+	@env GRPCPORT=50051 HOST=localhost go run ./client/client.go
 
-#test_wallet:
-#	@go test -v ./internal/app/services
+service_exec:
+	@docker-compose exec -it urlservice sh
+
+db_exec:
+	@docker exec -it pgdb sh
 
 generate_proto:
 	@mkdir -p ./internal/pkg
