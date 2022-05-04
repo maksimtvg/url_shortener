@@ -7,8 +7,8 @@ db_up:
 service_up:
 	@docker-compose up -d url-service
 
-server_up:
-	@docker-compose up -d urlservice
+app_run:
+	@docker-compose up
 
 run_server:
 	@env GRPCPORT=50051 HOST="pgdb" DBNAME=urls DBPORT=5432 DBHOST=localhost DBUSERNAME=backend DBPASSWORD=user TIMEOUT=5 go run ./cmd/main.go
