@@ -10,13 +10,13 @@ import (
 )
 
 type UrlShortener struct {
-	repo *repositories.DBRepository
+	repo repositories.Repository
 	gen  generator.Generator
 }
 
 // NewUrlShortener inits paddingIndex for generator.UriGenerator and returns *UrlShortener
 // initIndex is equal to the very last primary key in storage
-func NewUrlShortener(r *repositories.DBRepository) *UrlShortener {
+func NewUrlShortener(r repositories.Repository) *UrlShortener {
 	initIndex, err := r.Init()
 	if err != nil {
 		log.Fatalf("%s", err)
@@ -67,6 +67,7 @@ func (u UrlShortener) Delete(ctx context.Context, url *shortener.DeleteUrl) (*sh
 	}
 }
 
+// Get searches url model from the storage
 func (u UrlShortener) Get(ctx context.Context, url *shortener.GetUrl) (*shortener.UrlResponse, error) {
 	response := &shortener.UrlResponse{
 		Short: "",
@@ -87,9 +88,10 @@ func (u UrlShortener) Get(ctx context.Context, url *shortener.GetUrl) (*shortene
 	}
 }
 
+// Redirect searches url model by shortUri and return
 func (u UrlShortener) Redirect(ctx context.Context, url *shortener.RedirectUrl) (*shortener.RedirectResponse, error) {
 	response := &shortener.RedirectResponse{
-		ShortenedUrl: "",
+		Url: "",
 	}
 
 	select {
@@ -100,7 +102,7 @@ func (u UrlShortener) Redirect(ctx context.Context, url *shortener.RedirectUrl) 
 		if err != nil {
 			return nil, errors.New(err.Error())
 		}
-		response.ShortenedUrl = uri.GetLong()
+		response.Url = uri.GetLong()
 		return response, nil
 	}
 }

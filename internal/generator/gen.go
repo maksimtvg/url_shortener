@@ -3,11 +3,16 @@
 //keyChars is alphabet for base62 encoding
 package generator
 
-import "sync"
+import (
+	"errors"
+	"math"
+	"sync"
+)
 
 var (
-	keyChars          = []byte("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
-	keyCharsLen int64 = 62
+	keyChars             = []byte("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
+	keyCharsLen    int64 = 62
+	maxNumberError       = errors.New("number reached the max limit")
 )
 
 // number padding in order to not get small uris in the beginning
@@ -36,6 +41,10 @@ func NewUriGenerator(n int64) *UriGenerator {
 func (u *UriGenerator) GenerateUri() (string, error) {
 	u.mx.Lock()
 	defer u.mx.Unlock()
+
+	if u.index == math.MaxInt64 {
+		return "", maxNumberError
+	}
 
 	n := u.index + basePad
 	shortenedUrl := make([]byte, 20)

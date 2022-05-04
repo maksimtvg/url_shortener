@@ -73,7 +73,7 @@ func main() {
 	if err != nil {
 		fmt.Println(err)
 	}
-	err = exec.Command("open", redirect.GetShortenedUrl()).Start()
+	err = exec.Command("open", redirect.GetUrl()).Start()
 	if err != nil {
 		fmt.Println(err)
 	}

@@ -22,3 +22,9 @@ db_exec:
 generate_proto:
 	@mkdir -p ./internal/pkg
 	@protoc  api/proto/*.proto --go-grpc_out=internal/pkg --go_out=internal/pkg
+
+mock_repo:
+	@mockgen -destination internal/repositories/mock/mock_repository.go -source internal/repositories/repository.go
+
+test_service:
+	@go test -v ./internal/services/

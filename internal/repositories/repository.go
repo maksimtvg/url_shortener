@@ -13,10 +13,23 @@ import (
 	"url_shortener/internal/pkg/shortener"
 )
 
+// Repository interface
+type Repository interface {
+	Insert(ctx context.Context, url *shortener.CreateUrl, gen generator.Generator) (string, error)
+	Delete(ctx context.Context, url string) error
+	Init() (int64, error)
+	Find(ctx context.Context, shortUri string) (*shortener.UrlResponse, error)
+}
+
+// to ensure that DBRepository implements Repository interface
+var _ Repository = (*DBRepository)(nil)
+
+// DBRepository implements Repository interface for service storage
 type DBRepository struct {
 	Pg *pgxpool.Pool
 }
 
+// NewDBRepository  constructs DBRepository
 func NewDBRepository(dbPool *pgxpool.Pool) *DBRepository {
 	return &DBRepository{Pg: dbPool}
 }
