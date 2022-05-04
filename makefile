@@ -2,9 +2,12 @@ test_storage:
 	@go clean -testcache && go test -v ./internal/storage
 
 db_up:
-	@docker-compose up -d --build && docker-compose up -d
+	@docker-compose up -d --build db
 
 service_up:
+	@docker-compose up -d url-service
+
+server_up:
 	@docker-compose up -d urlservice
 
 run_server:
@@ -13,7 +16,7 @@ run_server:
 run_client:
 	@env GRPCPORT=50051 HOST=localhost go run ./client/client.go
 
-service_exec:
+server_exec:
 	@docker-compose exec -it urlservice sh
 
 db_exec:

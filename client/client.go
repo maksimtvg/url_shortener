@@ -11,17 +11,12 @@ import (
 	"os/exec"
 	"strconv"
 	"sync"
-	"time"
 	"url_shortener/internal/pkg/shortener"
 )
 
-const RequestTimeout = 20
-
 // runs grpc client
 func main() {
-	//cfg := config.NewConfig()
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second*RequestTimeout)
-	defer cancel()
+	ctx := context.Background()
 
 	conn, err := grpc.DialContext(ctx, "localhost"+":"+"50051", grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
@@ -38,7 +33,8 @@ func main() {
 	client := shortener.NewUrlShortenerServiceClient(conn)
 	// run concurrent create requests
 	var wg sync.WaitGroup
-	for i := 0; i < 200; i++ {
+	const goroutineAmount = 10000
+	for i := 0; i < goroutineAmount; i++ {
 		wg.Add(1)
 		go func(i int) {
 			created, err := client.Create(ctx, &shortener.CreateUrl{Url: "https://example.com/payload" + strconv.Itoa(i)})

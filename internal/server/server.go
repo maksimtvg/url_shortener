@@ -3,6 +3,9 @@ package server
 
 import (
 	"context"
+	"github.com/golang-migrate/migrate/v4"
+	_ "github.com/golang-migrate/migrate/v4/database/postgres"
+	_ "github.com/golang-migrate/migrate/v4/source/file"
 	"github.com/jackc/pgx/v4/pgxpool"
 	"google.golang.org/grpc"
 	"log"
@@ -15,6 +18,8 @@ import (
 	"url_shortener/internal/repositories"
 	"url_shortener/internal/services"
 )
+
+const migrationLocation = "file:///db/migrations/"
 
 type Server struct {
 	appConfig *config.Config
@@ -36,16 +41,7 @@ func NewServer() *Server {
 // Server starts in goroutine with context.
 // In order to stop server gracefully  there are two syscall - syscall.SIGTERM, syscall.SIGINT
 func (s *Server) Start() {
-	//m, err := migrate.New(
-	//	"file:///db/migrations/",
-	//	database.PgString(dbCfg),
-	//)
-	//if err != nil && err != migrate.ErrNoChange {
-	//	log.Fatal(err)
-	//}
-	//if err := m.Up(); err != nil && err != migrate.ErrNoChange {
-	//	log.Fatal(err)
-	//}
+	s.migrate()
 
 	dbConn, err := database.Connect(s.dbConfig)
 	if err != nil {
@@ -75,6 +71,19 @@ func (s *Server) Start() {
 
 	<-ctx.Done()
 	s.stopGracefully(grpcServer, dbConn)
+}
+
+func (s *Server) migrate() {
+	m, err := migrate.New(
+		migrationLocation,
+		database.PgString(s.dbConfig),
+	)
+	if err != nil && err != migrate.ErrNoChange {
+		log.Fatal(err)
+	}
+	if err := m.Up(); err != nil && err != migrate.ErrNoChange {
+		log.Fatal(err)
+	}
 }
 
 // stopGraceful stops server and DB gracefully
