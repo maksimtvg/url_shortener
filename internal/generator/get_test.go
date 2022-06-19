@@ -41,7 +41,7 @@ func TestUriGenerator_GenerateUri(t *testing.T) {
 	}
 }
 
-// tests correct type error returns
+// tests correct type error returns.
 func TestUriGenerator_MaxIntError(t *testing.T) {
 	testsTable := []struct {
 		input int64

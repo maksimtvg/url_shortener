@@ -2,22 +2,23 @@ package services
 
 import (
 	"context"
+	"testing"
+
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"testing"
 	"url_shortener/internal/generator"
 	"url_shortener/internal/pkg/shortener"
 	mock_repositories "url_shortener/internal/repositories/mock"
 )
 
-//tests Create method
+// tests Create method.
 func TestUrlShortener_Create(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 	repo := mock_repositories.NewMockRepository(ctrl)
 
-	//build stubs
+	// build stubs
 	urlRequest := &shortener.CreateUrl{
 		Url: "https://example.com/uri",
 	}
@@ -43,13 +44,13 @@ func TestUrlShortener_Create(t *testing.T) {
 	assert.Equal(t, create.Short, uri)
 }
 
-// tests Get method
+// tests Get method.
 func TestUrlShortener_Get(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 	repo := mock_repositories.NewMockRepository(ctrl)
 
-	//build stubs
+	// build stubs
 	response := &shortener.UrlResponse{
 		Long:  "https://example.com/uri",
 		Short: "6LAze",
@@ -73,7 +74,7 @@ func TestUrlShortener_Get(t *testing.T) {
 	assert.Equal(t, got.GetShort(), response.GetShort())
 }
 
-//tests Redirect method
+// tests Redirect method.
 func TestUrlShortener_Redirect(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()

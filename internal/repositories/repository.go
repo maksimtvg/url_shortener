@@ -3,17 +3,18 @@ package repositories
 
 import (
 	"context"
+	"time"
+
 	"github.com/jackc/pgtype"
 	"github.com/jackc/pgx/v4"
 	"github.com/jackc/pgx/v4/pgxpool"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"time"
 	"url_shortener/internal/generator"
 	"url_shortener/internal/pkg/shortener"
 )
 
-// Repository interface
+// Repository interface.
 type Repository interface {
 	Insert(ctx context.Context, url *shortener.CreateUrl, gen generator.Generator) (string, error)
 	Delete(ctx context.Context, url string) error
@@ -21,20 +22,20 @@ type Repository interface {
 	Find(ctx context.Context, shortUri string) (*shortener.UrlResponse, error)
 }
 
-// to ensure that DBRepository implements Repository interface
+// to ensure that DBRepository implements Repository interface.
 var _ Repository = (*DBRepository)(nil)
 
-// DBRepository implements Repository interface for service storage
+// DBRepository implements Repository interface for service storage.
 type DBRepository struct {
 	Pg *pgxpool.Pool
 }
 
-// NewDBRepository  constructs DBRepository
+// NewDBRepository  constructs DBRepository.
 func NewDBRepository(dbPool *pgxpool.Pool) *DBRepository {
 	return &DBRepository{Pg: dbPool}
 }
 
-// Insert inserts new urls
+// Insert inserts new urls.
 func (r *DBRepository) Insert(ctx context.Context, url *shortener.CreateUrl, gen generator.Generator) (string, error) {
 	var (
 		err       error
@@ -71,11 +72,9 @@ func (r *DBRepository) Insert(ctx context.Context, url *shortener.CreateUrl, gen
 	return uniqueUri, nil
 }
 
-// Delete add deleted_att for cortege
+// Delete add deleted_att for cortege.
 func (r *DBRepository) Delete(ctx context.Context, url string) error {
-	var (
-		tx pgx.Tx
-	)
+	var tx pgx.Tx
 
 	tx, err := r.Pg.Begin(ctx)
 	if err != nil {
@@ -96,7 +95,7 @@ func (r *DBRepository) Delete(ctx context.Context, url string) error {
 	return nil
 }
 
-// Init gets max id in database for initiating generator
+// Init gets max id in database for initiating generator.
 func (r *DBRepository) Init() (int64, error) {
 	var (
 		ctx context.Context
@@ -113,7 +112,7 @@ func (r *DBRepository) Init() (int64, error) {
 	return int64(num), nil
 }
 
-// Find searches by shortUri string
+// Find searches by shortUri string.
 func (r *DBRepository) Find(ctx context.Context, shortUri string) (*shortener.UrlResponse, error) {
 	var (
 		long  pgtype.Text

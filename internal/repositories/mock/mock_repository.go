@@ -7,10 +7,10 @@ package mock_repositories
 import (
 	context "context"
 	reflect "reflect"
-	generator "url_shortener/internal/generator"
-	shortener "url_shortener/internal/pkg/shortener"
 
 	gomock "github.com/golang/mock/gomock"
+	generator "url_shortener/internal/generator"
+	shortener "url_shortener/internal/pkg/shortener"
 )
 
 // MockRepository is a mock of Repository interface.

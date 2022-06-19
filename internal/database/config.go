@@ -1,15 +1,16 @@
 // Package database.
-//DBConfig is responsible for Database config.
+// DBConfig is responsible for Database config.
 package database
 
 import (
-	"github.com/kelseyhightower/envconfig"
 	"log"
+
+	"github.com/kelseyhightower/envconfig"
 )
 
 const MaxConn = 10
 
-// DBConfig is a struct for env vars
+// DBConfig is a struct for env vars.
 type DBConfig struct {
 	DBHost     string `required:"true"`
 	DBUserName string `required:"true"`
@@ -19,7 +20,7 @@ type DBConfig struct {
 	Timeout    int    `required:"true"`
 }
 
-// NewDBConfig returns database config struct
+// NewDBConfig returns database config struct.
 func NewDBConfig() *DBConfig {
 	var cfg DBConfig
 

@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"log"
+
 	"url_shortener/internal/generator"
 	"url_shortener/internal/pkg/shortener"
 	"url_shortener/internal/repositories"
@@ -15,7 +16,7 @@ type UrlShortener struct {
 }
 
 // NewUrlShortener inits paddingIndex for generator.UriGenerator and returns *UrlShortener
-// initIndex is equal to the very last primary key in storage
+// initIndex is equal to the very last primary key in storage.
 func NewUrlShortener(r repositories.Repository) *UrlShortener {
 	initIndex, err := r.Init()
 	if err != nil {
@@ -28,7 +29,7 @@ func NewUrlShortener(r repositories.Repository) *UrlShortener {
 	}
 }
 
-//Create handles creating new unique URI and inserts it in a storage
+// Create handles creating new unique URI and inserts it in a storage.
 func (u *UrlShortener) Create(ctx context.Context, url *shortener.CreateUrl) (*shortener.UrlResponse, error) {
 	response := &shortener.UrlResponse{
 		Short: "",
@@ -50,7 +51,7 @@ func (u *UrlShortener) Create(ctx context.Context, url *shortener.CreateUrl) (*s
 	}
 }
 
-//Delete handles removing uri from a storage
+// Delete handles removing uri from a storage.
 func (u UrlShortener) Delete(ctx context.Context, url *shortener.DeleteUrl) (*shortener.DeleteResponse, error) {
 	select {
 	case <-ctx.Done():
@@ -67,7 +68,7 @@ func (u UrlShortener) Delete(ctx context.Context, url *shortener.DeleteUrl) (*sh
 	}
 }
 
-// Get searches url model from the storage
+// Get searches url model from the storage.
 func (u UrlShortener) Get(ctx context.Context, url *shortener.GetUrl) (*shortener.UrlResponse, error) {
 	response := &shortener.UrlResponse{
 		Short: "",
@@ -88,7 +89,7 @@ func (u UrlShortener) Get(ctx context.Context, url *shortener.GetUrl) (*shortene
 	}
 }
 
-// Redirect searches url model by shortUri and return
+// Redirect searches url model by shortUri and return.
 func (u UrlShortener) Redirect(ctx context.Context, url *shortener.RedirectUrl) (*shortener.RedirectResponse, error) {
 	response := &shortener.RedirectResponse{
 		Url: "",

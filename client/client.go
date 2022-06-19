@@ -5,16 +5,17 @@ package main
 import (
 	"context"
 	"fmt"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials/insecure"
 	"log"
 	"os/exec"
 	"strconv"
 	"sync"
+
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 	"url_shortener/internal/pkg/shortener"
 )
 
-// runs grpc client
+// runs grpc client.
 func main() {
 	ctx := context.Background()
 
@@ -47,11 +48,6 @@ func main() {
 	}
 	wg.Wait()
 
-	//6LAze
-	//6LAzh
-	//6LAzm
-	//get request
-
 	urlResponse, err := client.Get(ctx, &shortener.GetUrl{Url: "6LAze"})
 	if err != nil {
 		fmt.Println(err)
@@ -64,7 +60,6 @@ func main() {
 	}
 	fmt.Println("removed status is " + deleted.GetStatus())
 
-	//open
 	redirect, err := client.Redirect(ctx, &shortener.RedirectUrl{Url: "6LAze"})
 	if err != nil {
 		fmt.Println(err)

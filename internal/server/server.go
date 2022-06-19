@@ -3,15 +3,16 @@ package server
 
 import (
 	"context"
+	"log"
+	"net"
+	"os/signal"
+	"syscall"
+
 	"github.com/golang-migrate/migrate/v4"
 	_ "github.com/golang-migrate/migrate/v4/database/postgres"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 	"github.com/jackc/pgx/v4/pgxpool"
 	"google.golang.org/grpc"
-	"log"
-	"net"
-	"os/signal"
-	"syscall"
 	"url_shortener/internal/config"
 	"url_shortener/internal/database"
 	"url_shortener/internal/pkg/shortener"
@@ -26,7 +27,7 @@ type Server struct {
 	dbConfig  *database.DBConfig
 }
 
-// NewServer constructs app Server
+// NewServer constructs app Server.
 func NewServer() *Server {
 	appC := config.NewConfig()
 	dbC := database.NewDBConfig()
@@ -39,8 +40,9 @@ func NewServer() *Server {
 
 // Start launches app server.
 // Server starts in goroutine with context.
-// In order to stop server gracefully  there are two syscall - syscall.SIGTERM, syscall.SIGINT
+// In order to stop server gracefully  there are two syscall - syscall.SIGTERM, syscall.SIGINT.
 func (s *Server) Start() {
+	// runs migrations
 	s.migrate()
 
 	dbConn, err := database.Connect(s.dbConfig)
@@ -86,7 +88,7 @@ func (s *Server) migrate() {
 	}
 }
 
-// stopGraceful stops server and DB gracefully
+// stopGraceful stops server and DB gracefully.
 func (s *Server) stopGracefully(server *grpc.Server, dbConn *pgxpool.Pool) {
 	dbConn.Close()
 	server.GracefulStop()

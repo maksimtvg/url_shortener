@@ -1,6 +1,6 @@
 // Package generator.
-//max unique Uris is (2^62 - basePad), equals 4.6e18 unique uris
-//keyChars is alphabet for base62 encoding
+// max unique Uris is (2^62 - basePad), equals 4.6e18 unique uris
+// keyChars is alphabet for base62 encoding
 package generator
 
 import (
@@ -15,21 +15,21 @@ var (
 	maxNumberError       = errors.New("number reached the max limit")
 )
 
-// number padding in order to not get small uris in the beginning
+// number padding in order to not get small uris in the beginning.
 const basePad = 100_000_000
 
-// Generator declares generator interface for generating unique uris
+// Generator declares generator interface for generating unique uris.
 type Generator interface {
 	GenerateUri() (string, error)
 }
 
-// UriGenerator is for generating unique uris
+// UriGenerator is for generating unique uris.
 type UriGenerator struct {
 	index int64
 	mx    *sync.Mutex
 }
 
-// NewUriGenerator constructor
+// NewUriGenerator constructor.
 func NewUriGenerator(n int64) *UriGenerator {
 	return &UriGenerator{
 		index: n,
@@ -37,7 +37,7 @@ func NewUriGenerator(n int64) *UriGenerator {
 	}
 }
 
-// GenerateUri locks index generates unique uri and unlock index. Concurrently save
+// GenerateUri locks index generates unique uri and unlock index. Concurrently save.
 func (u *UriGenerator) GenerateUri() (string, error) {
 	u.mx.Lock()
 	defer u.mx.Unlock()
